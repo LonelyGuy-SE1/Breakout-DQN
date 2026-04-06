@@ -1,4 +1,5 @@
 #buffer of frames
+#lazybuffer will handle frames while training and this will be used while playing the game post training
 
 import numpy as np
 
