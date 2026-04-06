@@ -19,7 +19,7 @@ class LazyReplayBuffer:
         self.actions[self.pos]=action
         self.rewards[self.pos]=reward
         self.done[self.pos]=done
-        #circilar pointer logic
+        #circular pointer logic
         self.pos=(self.pos+1) % self.capacity
         if self.pos==0:
             self.full=True
