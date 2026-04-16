@@ -6,7 +6,8 @@ import torch.nn.functional as F
 class DQN(nn.Module):
     def __init__(self, input_channels=4, num_actions=4):
         super().__init__()
-
+        # (input-kernel)/stride + 1
+        # resnet can be used since gpus are viable. the current implementation was used when compute was a bottleneck
         self.conv1 = nn.Conv2d(input_channels, 32, kernel_size=8, stride=4)
         self.conv2 = nn.Conv2d(32, 64, kernel_size=4, stride=2)
         self.conv3 = nn.Conv2d(64, 64, kernel_size=3, stride=1)
