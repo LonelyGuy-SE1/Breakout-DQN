@@ -19,7 +19,7 @@ pip install -r requirements.txt
 
 ### 2. Synchronization & Training (Cloud/GPU Recommended)
 
-To initiate the learning loop, execute the orchestrator. For full convergence, this should be run on a dedicated tensor accelerator (e.g., Nvidia T4/P100) for ~5,000,000 frames.
+To initiate the learning loop, execute the orchestrator. For full convergence, this should be run on a dedicated tensor accelerator for ~5,000,000 frames.
 
 ```bash
 python -m Orchestrator.train
