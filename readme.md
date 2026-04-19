@@ -34,7 +34,7 @@ To watch the trained agent execute in reality with 100% exploitation (no random 
 ```bash
 python -m Tests.evaluate
 ```
-
+-----------
 The current implementation relies on a brute force spatial memory architecture (LazyReplayBuffer). Potential Future iterations of this logic will bypass raw pixel processing by dreaming in latent space, specifically exploring:
 
 - Variational Autoencoders (VAEs) to compress spatial reality into denser mathematical representations.
