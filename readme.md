@@ -2,7 +2,7 @@
 
 A (kind of) first principles pipeline build of a Reinforcement Learning agent for Atari Breakout, using PyTorch.
 
-_(Note: The current iteration utilizes DQN to establish off policy mathematical foundations)._
+_(Note: The current iteration utilizes DQN to establish off policy mathematical foundations. Also vectors were avoided intentionally. Use vectors if you want the process to be faster. Replace loops with vector math.)._
 
 The system is decoupled into isolated modules to separate the environment constraints from the calculus engine.
 
@@ -17,15 +17,15 @@ pip freeze > requirements.txt
 pip install -r requirements.txt
 ```
 
-### 2. Synchronization & Training (Cloud/GPU Recommended)
+### 2. Synchronization & Training (GPU Recommended)
 
-To initiate the learning loop, execute the orchestrator. For full convergence, this should be run on a dedicated tensor accelerator for ~5,000,000 frames.
+To initiate the learning loop, execute the orchestrator. For full convergence, this should be run on a dedicated tensor accelerator for ~5,000,000 frames. 
 
 ```bash
 python -m Orchestrator.train
 ```
 
-_Outputs: dqn_brain.pth (The serialized neural weights)._
+_Outputs: dqn_brain.pth (The serialized neural weights) (This repo doesn't have any checkpoints, only one file is saved after the full training is done, so add your own checkpoint logic if you want to)._
 
 ### 3. Deployment & Inference (Local CPU)
 
