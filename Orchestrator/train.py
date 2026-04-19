@@ -8,14 +8,14 @@ from Memory.buffer import LazyReplayBuffer
 from Agent.dqn_agent import DQNAgent
 
 #modify as desired
-MAX_FRAMES=500000
-BATCH_SIZE=320
+MAX_FRAMES=5000000
+BATCH_SIZE=32
 BUFFER_CAPACITY=250000
 SYNC_TARGET_FRAMES=10000 # target network clones policy network
 
 EPSILON_START=1.0
 EPSILON_END=0.1
-EPSILON_DECAY=25000 #frame at which epsilon hits the minimum
+EPSILON_DECAY=1000000 #frame at which epsilon hits the minimum
 
 def train():
     print("Starting Orchestratior!")
