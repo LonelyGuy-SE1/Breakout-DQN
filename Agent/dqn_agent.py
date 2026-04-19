@@ -9,7 +9,7 @@ from Agent.network import DQN
 class DQNAgent:
     def __init__(self, state_shape=(4,84,84), num_actions=4, lr=1e-4, gamma=0.99):
         
-        self.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.num_actions=num_actions
         self.gamma=gamma
         
@@ -41,12 +41,12 @@ class DQNAgent:
         #bellman eqn
         
         states, actions, rewards, next_states, dones = experiences
-        states=torch.FloatTensor(states).to(self.devices)
-        next_states=torch.FloatTensor(next_states).to(self.devices)
+        states=torch.FloatTensor(states).to(self.device)
+        next_states=torch.FloatTensor(next_states).to(self.device)
         # unsqueeze to convert row matrix to column so bellman math can be done
-        actions=torch.LongTensor(actions).unsqueeze(1).to(self.devices)
-        rewards=torch.FloatTensor(rewards).unsqueeze(1).to(self.devices)
-        dones=torch.FloatTensor(dones).unsqueeze(1).to(self.devices)
+        actions=torch.LongTensor(actions).unsqueeze(1).to(self.device)
+        rewards=torch.FloatTensor(rewards).unsqueeze(1).to(self.device)
+        dones=torch.FloatTensor(dones).unsqueeze(1).to(self.device)
         
         current_q=self.policy_net(states).gather(1,actions)
         
@@ -66,7 +66,7 @@ class DQNAgent:
         return loss.item()
     
     def update_target_network(self):
-        self.target_net.load_state_dict(self.policy_net.state_dict)
+        self.target_net.load_state_dict(self.policy_net.state_dict())
         
         
         

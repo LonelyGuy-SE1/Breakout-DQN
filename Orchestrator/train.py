@@ -8,12 +8,12 @@ from Memory.buffer import LazyReplayBuffer
 from Agent.dqn_agent import DQNAgent
 
 #modify as desired
-MAX_FRAMES=50000
-BATCH_SIZE=32
-BUFFER_CAPACITY=25000
-SYNC_TARGET_FRAMES=1000 # target network clones policy network
+MAX_FRAMES=500000
+BATCH_SIZE=320
+BUFFER_CAPACITY=250000
+SYNC_TARGET_FRAMES=10000 # target network clones policy network
 
-EPSILON_START=1,0
+EPSILON_START=1.0
 EPSILON_END=0.1
 EPSILON_DECAY=25000 #frame at which epsilon hits the minimum
 
@@ -23,7 +23,7 @@ def train():
     env=gym.make("ALE/Breakout-v5", render_mode="human")
     pipeline=AtariPipeline(stack_size=4,screen_size=84)
     buffer=LazyReplayBuffer(capacity=BUFFER_CAPACITY)
-    agent=DQNAgent(state_shape=(4,84.84), num_actions=4)
+    agent=DQNAgent(state_shape=(4,84,84), num_actions=4)
     
     frame_idx=0
     episode_reward=0
@@ -62,11 +62,15 @@ def train():
             state = pipeline.reset(raw_obs)
             episode_reward = 0
             
-        print("Training Complete!")
-        env.close
+    print("Training Complete!")
         
-    if __name__=="__main__":
-        train()
+    print("Saving Weights...")
+    torch.save(agent.policy_net.state_dict(), "dqn_brain.pth")
+    print("Weights Saved!")
+    env.close()
+        
+if __name__=="__main__":
+    train()
                 
 
 

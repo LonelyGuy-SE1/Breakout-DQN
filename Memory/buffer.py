@@ -18,7 +18,7 @@ class LazyReplayBuffer:
         self.frames[self.pos]=(frame*255).astype(np.uint8)
         self.actions[self.pos]=action
         self.rewards[self.pos]=reward
-        self.done[self.pos]=done
+        self.dones[self.pos]=done
         #circular pointer logic
         self.pos=(self.pos+1) % self.capacity
         if self.pos==0:
@@ -30,7 +30,7 @@ class LazyReplayBuffer:
         for i in range(self.history_length):
             curr_idx=(index-i)%self.capacity
             
-            if not self.done and curr_idx>=self.pos:
+            if not self.dones[curr_idx] and curr_idx>=self.pos:
                 break
             
             stack[self.history_length-1-i]=self.frames[curr_idx].astype(np.float32)/255
