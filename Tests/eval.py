@@ -13,7 +13,9 @@ def deploy_agent():
     brain = DQN(input_channels=4, num_actions=4).to(device)
     
     print("Loading weights...")
-    brain.load_state_dict(torch.load("dqn_brain.pth", map_location=device))
+    #brain.load_state_dict(torch.load("dqn_brain.pth", map_location=device)) - use this line if the other does not work
+    checkpoint = torch.load("dqn_brain.pth", map_location=device)
+    brain.load_state_dict(checkpoint['policy_state_dict'])
     brain.eval() 
     
     raw_obs, _ = env.reset()
