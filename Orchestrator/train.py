@@ -14,8 +14,8 @@ BUFFER_CAPACITY=250000
 SYNC_TARGET_FRAMES=10000 # target network clones policy network
 
 EPSILON_START=1.0
-EPSILON_END=0.1
-EPSILON_DECAY=1000000 #frame at which epsilon hits the minimum
+EPSILON_END=0.01
+EPSILON_DECAY=5000000 #frame at which epsilon hits the minimum
 
 def train():
     print("Starting Orchestratior!")

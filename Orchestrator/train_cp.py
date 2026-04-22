@@ -16,8 +16,8 @@ SYNC_TARGET_FRAMES = 10000
 SAVE_INTERVAL = 50000 
 
 EPSILON_START = 1.0
-EPSILON_END = 0.1
-EPSILON_DECAY = 1000000 
+EPSILON_END = 0.01
+EPSILON_DECAY = 5000000
 
 WEIGHTS_PATH = "/content/drive/MyDrive/dqn_brain.pth"
 
@@ -35,7 +35,6 @@ signal.signal(signal.SIGINT, secure_shutdown)
 signal.signal(signal.SIGTERM, secure_shutdown)
 
 def save_checkpoint(frame_idx, agent, path):
-    """Performs an atomic save to prevent file corruption."""
     temp_path = path + ".tmp"
     checkpoint = {
         'frame_idx': frame_idx,
@@ -49,10 +48,13 @@ def save_checkpoint(frame_idx, agent, path):
 def train():
     print("Starting Orchestrator!")
     gym.register_envs(ale_py)
-    
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Executing on hardware: {device}")
+
     env = gym.make("ALE/Breakout-v5")
     pipeline = AtariPipeline(stack_size=4, screen_size=84)
     buffer = LazyReplayBuffer(capacity=BUFFER_CAPACITY)
+    
     agent = DQNAgent(state_shape=(4,84,84), num_actions=4)
     
     frame_idx = 0
@@ -60,11 +62,13 @@ def train():
     if os.path.exists(WEIGHTS_PATH):
         try:
             print(f"Loading existing checkpoint from {WEIGHTS_PATH}...")
-            checkpoint = torch.load(WEIGHTS_PATH)
+            checkpoint = torch.load(WEIGHTS_PATH, map_location=device)
+            
             agent.policy_net.load_state_dict(checkpoint['policy_state_dict'])
             agent.target_net.load_state_dict(checkpoint['target_state_dict'])
             agent.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
             frame_idx = checkpoint['frame_idx']
+            
             print(f"Resumed at Frame {frame_idx}. Epsilon clock restored.")
         except Exception as e:
             print(f"Failed to load checkpoint: {e}. Starting from scratch.")
