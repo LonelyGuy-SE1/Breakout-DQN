@@ -1,5 +1,6 @@
 import gymnasium as gym
 import torch
+import numpy as np
 import ale_py
 from Preprocessing.prep_pipeline import AtariPipeline
 from Agent.network import DQN
@@ -13,14 +14,20 @@ def deploy_agent():
     brain = DQN(input_channels=4, num_actions=4).to(device)
     
     print("Loading weights...")
-    #brain.load_state_dict(torch.load("dqn_brain.pth", map_location=device)) - use this line if the other does not work
     checkpoint = torch.load("dqn_brain.pth", map_location=device)
     brain.load_state_dict(checkpoint['policy_state_dict'])
     brain.eval() 
     
     raw_obs, _ = env.reset()
     state = pipeline.reset(raw_obs)
+    
+    print("Forcing serve...")
+    raw_obs, _, _, _, _ = env.step(1)
+    state = pipeline.step(raw_obs)
+    
     done = False
+    stuck_counter = 0
+    last_state = None
     
     print("Agent Deployed!")
     while not done:
@@ -29,6 +36,17 @@ def deploy_agent():
         with torch.no_grad():
             q_values = brain(state_tensor)
             action = q_values.argmax(dim=1).item()
+            
+        if last_state is not None and np.array_equal(state, last_state):
+            stuck_counter += 1
+        else:
+            stuck_counter = 0
+            
+        if stuck_counter > 20: 
+            action = 1 
+            stuck_counter = 0
+            
+        last_state = np.copy(state)
             
         raw_obs, reward, terminated, truncated, _ = env.step(action)
         done = terminated or truncated
